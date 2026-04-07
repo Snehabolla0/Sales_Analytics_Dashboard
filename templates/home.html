@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>🏠 Sales Overview</h2>
+
+<!-- ================= CHART ROW 1 ================= -->
+<div class="chart-row">
+
+    <div class="chart-box">
+        <h3>📈 Monthly Sales</h3>
+        <canvas id="salesChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h3>🥧 Product Distribution</h3>
+        <canvas id="pieChart"></canvas>
+    </div>
+
+</div>
+
+<!-- ================= CHART ROW 2 ================= -->
+<div class="chart-row">
+
+    <div class="chart-box">
+        <h3>📊 Product Sales</h3>
+        <canvas id="barChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h3>📉 Sales Trend</h3>
+        <canvas id="trendChart"></canvas>
+    </div>
+
+</div>
+
+<script>
+/* ================= SAFE DATA ================= */
+const months = {{ months_json | default('[]') | safe }};
+const sales = {{ sales_json | default('[]') | safe }};
+const products = {{ products_json | default('[]') | safe }};
+const product_sales = {{ product_sales_json | default('[]') | safe }};
+
+/* ================= MONTHLY SALES LINE ================= */
+new Chart(document.getElementById("salesChart"), {
+    type: "line",
+    data: {
+        labels: months,
+        datasets: [{
+            label: "Monthly Sales",
+            data: sales,
+            borderColor: "#16a085",
+            backgroundColor: "rgba(22,160,133,0.2)",
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+/* ================= PRODUCT PIE ================= */
+new Chart(document.getElementById("pieChart"), {
+    type: "doughnut",
+    data: {
+        labels: products,
+        datasets: [{
+            data: product_sales,
+            backgroundColor: [
+                "#1abc9c",
+                "#3498db",
+                "#f39c12",
+                "#e74c3c",
+                "#9b59b6"
+            ],
+            hoverOffset: 10
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+/* ================= PRODUCT BAR ================= */
+new Chart(document.getElementById("barChart"), {
+    type: "bar",
+    data: {
+        labels: products,
+        datasets: [{
+            label: "Sales by Product",
+            data: product_sales,
+            backgroundColor: "#2980b9"
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+/* ================= SALES TREND ================= */
+new Chart(document.getElementById("trendChart"), {
+    type: "line",
+    data: {
+        labels: months,
+        datasets: [{
+            label: "Sales Trend",
+            data: sales,
+            borderColor: "#8e44ad",
+            backgroundColor: "rgba(142,68,173,0.2)",
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>📈 Analytics Dashboard</h2>
+
+<!-- ================= ROW 1 ================= -->
+<div class="chart-row">
+
+    <div class="chart-box">
+        <h3>📈 Sales Trend</h3>
+        <canvas id="trendChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h3>📊 Region Sales (Bar)</h3>
+        <canvas id="barChart"></canvas>
+    </div>
+
+</div>
+
+<!-- ================= ROW 2 ================= -->
+<div class="chart-row">
+
+    <div class="chart-box">
+        <h3>🥧 Region Distribution</h3>
+        <canvas id="pieChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h3>📊 Sales Histogram</h3>
+        <canvas id="histChart"></canvas>
+    </div>
+
+</div>
+
+<!-- ================= ROW 3 ================= -->
+<div class="chart-row">
+
+    <div class="chart-box">
+        <h3>🍩 Region Doughnut</h3>
+        <canvas id="doughnutChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h3>📉 Area Chart</h3>
+        <canvas id="areaChart"></canvas>
+    </div>
+
+</div>
+
+<script>
+/* ================= SAFE DATA ================= */
+const months = {{ months_json | default('[]') | safe }};
+const sales = {{ sales_json | default('[]') | safe }};
+const regions = {{ regions_json | default('[]') | safe }};
+const region_sales = {{ region_sales_json | default('[]') | safe }};
+
+/* ================= SALES TREND ================= */
+new Chart(document.getElementById("trendChart"), {
+    type: "line",
+    data: {
+        labels: months,
+        datasets: [{
+            label: "Sales Trend",
+            data: sales,
+            borderColor: "#16a085",
+            backgroundColor: "rgba(22,160,133,0.2)",
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+/* ================= REGION BAR ================= */
+new Chart(document.getElementById("barChart"), {
+    type: "bar",
+    data: {
+        labels: regions,
+        datasets: [{
+            label: "Sales by Region",
+            data: region_sales,
+            backgroundColor: "#3498db"
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+/* ================= PIE ================= */
+new Chart(document.getElementById("pieChart"), {
+    type: "doughnut",
+    data: {
+        labels: regions,
+        datasets: [{
+            data: region_sales,
+            backgroundColor: [
+                "#1abc9c",
+                "#3498db",
+                "#f39c12",
+                "#e74c3c",
+                "#9b59b6"
+            ],
+            hoverOffset: 10
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+/* ================= HISTOGRAM ================= */
+new Chart(document.getElementById("histChart"), {
+    type: "bar",
+    data: {
+        labels: months,
+        datasets: [{
+            label: "Sales Frequency",
+            data: sales,
+            backgroundColor: "#e67e22"
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+/* ================= DOUGHNUT ================= */
+new Chart(document.getElementById("doughnutChart"), {
+    type: "doughnut",
+    data: {
+        labels: regions,
+        datasets: [{
+            data: region_sales,
+            backgroundColor: [
+                "#2ecc71",
+                "#9b59b6",
+                "#e74c3c",
+                "#3498db"
+            ],
+            hoverOffset: 10
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+/* ================= AREA CHART ================= */
+new Chart(document.getElementById("areaChart"), {
+    type: "line",
+    data: {
+        labels: months,
+        datasets: [{
+            label: "Area Sales",
+            data: sales,
+            borderColor: "#2980b9",
+            backgroundColor: "rgba(52,152,219,0.4)",
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+</script>
+
+{% endblock %}

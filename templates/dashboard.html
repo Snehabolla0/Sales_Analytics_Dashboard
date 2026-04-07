@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>📊 Sales Analysis Dashboard</h2>
+
+<!-- ================= ADD SALES ================= -->
+<h3>➕ Add Sales</h3>
+<form method="POST" class="add-form">
+    <input type="text" name="product" placeholder="Product" required>
+    <input type="text" name="category" placeholder="Category" required>
+    <input type="number" name="sales" placeholder="Sales" required>
+    <input type="number" name="profit" placeholder="Profit" required>
+    <input type="text" name="region" placeholder="Region" required>
+    <input type="text" name="month" placeholder="Month" required>
+    <button type="submit">Add</button>
+</form>
+
+<div style="height:25px;"></div>
+
+<!-- ================= KPI CARDS ================= -->
+<div class="cards">
+    <div class="card green">
+        <h4>Total Sales</h4>
+        <h2>{{ total }}</h2>
+    </div>
+
+    <div class="card blue">
+        <h4>Total Revenue</h4>
+        <h2>₹ {{ revenue }}</h2>
+    </div>
+
+    <div class="card orange">
+        <h4>Average Sales</h4>
+        <h2>₹ {{ avg }}</h2>
+    </div>
+</div>
+
+<!-- ================= CHART ROW 1 ================= -->
+<div class="chart-row">
+
+    <div class="chart-box">
+        <h3>📈 Sales Trend</h3>
+        <canvas id="lineChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h3>🍩 Region Distribution</h3>
+        <canvas id="pieChart"></canvas>
+    </div>
+
+</div>
+
+<!-- ================= CHART ROW 2 ================= -->
+<div class="chart-row">
+
+    <div class="chart-box">
+        <h3>📊 Product Sales</h3>
+        <canvas id="barChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h3>📉 Profit Trend</h3>
+        <canvas id="profitChart"></canvas>
+    </div>
+
+</div>
+
+<script>
+/* ================= SAFE DATA ================= */
+const months = {{ months_json | default('[]') | safe }};
+const sales = {{ sales_json | default('[]') | safe }};
+const profits = {{ profit_json | default('[]') | safe }};
+const regions = {{ regions_json | default('[]') | safe }};
+const region_sales = {{ region_sales_json | default('[]') | safe }};
+const products = {{ products_json | default('[]') | safe }};
+const product_sales = {{ product_sales_json | default('[]') | safe }};
+
+/* ================= SALES LINE ================= */
+new Chart(document.getElementById("lineChart"), {
+    type: "line",
+    data: {
+        labels: months,
+        datasets: [{
+            label: "Sales",
+            data: sales,
+            borderColor: "#16a085",
+            backgroundColor: "rgba(22,160,133,0.2)",
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+/* ================= REGION PIE ================= */
+new Chart(document.getElementById("pieChart"), {
+    type: "doughnut",
+    data: {
+        labels: regions,
+        datasets: [{
+            data: region_sales,
+            backgroundColor: [
+                "#1abc9c",
+                "#3498db",
+                "#f39c12",
+                "#e74c3c",
+                "#9b59b6"
+            ],
+            hoverOffset: 10
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+/* ================= PRODUCT BAR ================= */
+new Chart(document.getElementById("barChart"), {
+    type: "bar",
+    data: {
+        labels: products,
+        datasets: [{
+            label: "Product Sales",
+            data: product_sales,
+            backgroundColor: "#2980b9"
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+/* ================= PROFIT LINE ================= */
+new Chart(document.getElementById("profitChart"), {
+    type: "line",
+    data: {
+        labels: months,
+        datasets: [{
+            label: "Profit",
+            data: profits,
+            borderColor: "#8e44ad",
+            backgroundColor: "rgba(142,68,173,0.2)",
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+</script>
+
+{% endblock %}

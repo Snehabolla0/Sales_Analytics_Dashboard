@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sales Dashboard</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+    <h2 style="color:white; text-align:center;">📊 Dashboard</h2>
+
+    <a href="/dashboard">📊 Dashboard</a>
+    <a href="/home">🏠 Home</a>
+    <a href="/analytics">📈 Analytics</a>
+    <a href="/reports">📄 Reports</a>
+    <a href="/logout">🚪 Logout</a>
+</div>
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="content">
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div style="background:#2ecc71; color:white; padding:10px; border-radius:8px; margin-bottom:15px;">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+</div>
+
+</body>
+</html>

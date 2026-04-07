@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>📄 Reports</h2>
+
+<input type="text" id="searchInput" placeholder="🔍 Search..." onkeyup="searchTable()" class="search-box">
+
+<br><br>
+
+<button onclick="downloadCSV()" class="export-btn">⬇️ Download CSV</button>
+
+<table id="reportTable">
+<tr>
+<th>Product</th>
+<th>Sales</th>
+<th>Region</th>
+<th>Month</th>
+<th>Category</th>
+<th>Profit</th>
+</tr>
+
+{% for row in reports %}
+<tr>
+<td>{{ row[0] }}</td>
+<td>{{ row[2] }}</td>
+<td>{{ row[4] }}</td>
+<td>{{ row[5] }}</td>
+<td>{{ row[1] }}</td>
+<td>{{ row[3] }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<script>
+function searchTable() {
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    let rows = document.querySelectorAll("#reportTable tr");
+
+    rows.forEach((row, index) => {
+        if (index === 0) return;
+        let text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? "" : "none";
+    });
+}
+
+function downloadCSV() {
+    let rows = document.querySelectorAll("table tr");
+    let csv = [];
+
+    rows.forEach(row => {
+        let cols = row.querySelectorAll("td, th");
+        let data = [];
+        cols.forEach(col => data.push(col.innerText));
+        csv.push(data.join(","));
+    });
+
+    let blob = new Blob([csv.join("\n")], { type: "text/csv" });
+    let url = window.URL.createObjectURL(blob);
+
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = "report.csv";
+    a.click();
+}
+</script>
+
+{% endblock %}
